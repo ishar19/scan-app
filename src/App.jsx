@@ -15,11 +15,11 @@ export default function  App(){
 
   const [progressBarWidth, setProgressBarWidth] = React.useState(2)
   const [progressBarDisplay, setProgressBarDisplay] = React.useState("none")
-  const height = screen.availHeight;
-  const width = screen.availWidth;
+  const height = screen.height;
+  const width = screen.width;
   const videoConstraints = {
     width: width,
-    height:height,
+    height: height,
     facingMode: "user",
     frameRate:60,
   };
@@ -77,20 +77,20 @@ export default function  App(){
       var fd = new FormData();
       fd.append('scan', blob, 'scan1.mp4');   // changr upl to your file.get name
       console.log("here")
-      // fetch('http://localhost:5500/upload',    // change URL to your scan server URL
-      //   {
-      //     method: 'post',
-      //     body: fd
-      //   })
-      //   .then(function (response) {
-      //     alert("Scan is successfully uploaded")
-      //     console.log('done');
-      //     return response;
-      //   })
-      //   .catch(function (err) {
-      //     alert("Something wrong happened, please try again")
-      //     console.log(err);
-      //   });
+      fetch('http://localhost:5000/upload',    // change URL to your scan server URL
+        {
+          method: 'post',
+          body: fd
+        })
+        .then(function (response) {
+          alert("Scan is successfully uploaded")
+          console.log('done');
+          console.log(response);
+        })
+        .catch(function (err) {
+          alert("Something wrong happened, please try again")
+          console.log(err);
+        });
       window.URL.revokeObjectURL(url);
       setRecordedChunks([]);
     }
@@ -99,12 +99,11 @@ export default function  App(){
 
   return (
     <div>
-      <Webcam audio={false} videoConstraints={videoConstraints} ref={webcamRef} />
-
+      <Webcam  audio={false} videoConstraints={videoConstraints} ref={webcamRef} />
       <div className='text-white absolute top-8 w-[80vw] left-[10%]'>
           Make sure the console is in view and the camera is focused before starting the scan.
       </div>
-      <div class=" w-[100px] h-[20px] z-20 absolute top-20 left-28  bg-red-900" style={{ display: `${progressBarDisplay}` }} >
+      <div class=" w-[100px] h-[20px] z-20 relative translate-x-[50vw] right-[50px]  bottom-[80vh]  bg-red-900" style={{ display: `${progressBarDisplay}` }} >
         <div class="bg-[#FF5447] h-[100%]" style={{width:`${progressBarWidth}%`}}></div>
       </div>
       {capturing ?
@@ -120,8 +119,6 @@ export default function  App(){
             <div className='bg-[#FF5447] w-[40px] h-[40px] rounded-full mx-auto translate-y-[-17px] ' onClick={handleStartCaptureClick} ></div>
           </div>
         )}
-
-
       {recordedChunks.length > 0 && 
         (
           <div className='absolute bottom-0 w-[100vw] bg-black h-[50px] ' >
@@ -130,7 +127,6 @@ export default function  App(){
           </div>
         )
       }
-
     </div>
   );
 };
