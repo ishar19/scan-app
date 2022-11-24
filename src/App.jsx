@@ -15,13 +15,14 @@ export default function  App(){
 
   const [progressBarWidth, setProgressBarWidth] = React.useState(2)
   const [progressBarDisplay, setProgressBarDisplay] = React.useState("none")
-  const height = screen.height;
-  const width = screen.width;
+  var ratio = window.devicePixelRatio || 1;
+  var width = screen.width * 1;
+  var height = screen.height * 1;
+
+  
   const videoConstraints = {
-    width: width,
-    height: height,
     facingMode: "user",
-    frameRate:60,
+    frameRate:30,
   };
 
 
@@ -75,9 +76,9 @@ export default function  App(){
       console.log(blob)
       const url = URL.createObjectURL(blob);
       var fd = new FormData();
-      fd.append('scan', blob, 'scan1.mp4');   // changr upl to your file.get name
+      fd.append('scan', blob, 'scan7.mp4');   // changr upl to your file.get name
       console.log("here")
-      fetch('http://localhost:5000/upload',    // change URL to your scan server URL
+      fetch('http://localhost:5500/upload',    // change URL to your scan server URL
         {
           method: 'post',
           body: fd
@@ -98,30 +99,36 @@ export default function  App(){
 
 
   return (
-    <div>
-      <Webcam  audio={false} videoConstraints={videoConstraints} ref={webcamRef} />
-      <div className='text-white absolute top-8 w-[80vw] left-[10%]'>
+    <div className=''>
+      <Webcam
+        style={{
+          height: "100vh",
+          width: "100%",
+          objectFit: "fill",
+          position: "absolute"
+        }} className=''  audio={false} videoConstraints={videoConstraints} ref={webcamRef} />
+      <div className='text-white absolute z-[100] top-8 w-[80vw] left-[10%]'>
           Make sure the console is in view and the camera is focused before starting the scan.
       </div>
-      <div class=" w-[100px] h-[20px] z-20 relative translate-x-[50vw] right-[50px]  bottom-[80vh]  bg-red-900" style={{ display: `${progressBarDisplay}` }} >
+      <div class=" w-[100px] h-[20px] z-100 absolute  left-[50vw]  bottom-[80vh]  bg-red-900" style={{ display: `${progressBarDisplay}` }} >
         <div class="bg-[#FF5447] h-[100%]" style={{width:`${progressBarWidth}%`}}></div>
       </div>
       {capturing ?
         <div>
-          <div className='absolute bottom-0 w-[100vw] bg-black h-[50px] ' >
+          <div className='absolute bottom-0 w-[100vw] z-100  bg-black h-[50px] ' >
             <div className='bg-[#FF5447] w-[40px] h-[40px] rounded-full mx-auto translate-y-[-17px]' ></div>
           </div>
           <p className='text-red-900 hidden'>Capturing footage</p>
           <button style={{ display: "none" }} id='stopCapture' onClick={handleStopCaptureClick}>Stop Capture</button>
         </div>
         : (
-          <div className='absolute bottom-0 w-[100vw] bg-black h-[50px] ' >
+          <div className='absolute bottom-0 w-[100vw] z-100  bg-black h-[50px] ' >
             <div className='bg-[#FF5447] w-[40px] h-[40px] rounded-full mx-auto translate-y-[-17px] ' onClick={handleStartCaptureClick} ></div>
           </div>
         )}
       {recordedChunks.length > 0 && 
         (
-          <div className='absolute bottom-0 w-[100vw] bg-black h-[50px] ' >
+          <div className='absolute bottom-0 w-[100vw] z-100  bg-black h-[50px] ' >
           <div className='bg-[#FF5447] w-[40px] h-[40px] rounded-full mx-auto translate-y-[-17px]' ></div>
           <button style={{ display: "none" }} id='upload'  onClick={handleDownload}>Download</button>
           </div>
